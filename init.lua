@@ -62,7 +62,7 @@ modals = {
       self.modal = hs.hotkey.modal.new()
       displayModalText "e \t emacs\nc \t chrome\nt \t terminal\ns \t slack\nb \t brave\nw \t 企业微信\nq \t QQ\nm  NeteaseMusic"
       self.modal:bind("","escape", function() fsm:toIdle() end)
-      self.modal:bind({"cmd"}, "space", nil, function() fsm:toMain() end)
+      self.modal:bind({"cmd"}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
       hs.fnutils.each({
           { key = "t", app = "iTerm2" },
           { key = "c", app = "Google Chrome" },
@@ -88,7 +88,7 @@ modals = {
       displayModalText "h \t previous track\nl \t next track\nk \t volume up\nj \t volume down\np \t play/pause\na \t launch player"
 
       self.modal:bind("","escape", function() fsm:toIdle() end)
-      self.modal:bind({"cmd"}, "space", nil, function() fsm:toMain() end)
+      self.modal:bind({"cmd"}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
 
       multimedia.bind(self.modal, fsm)
       self.modal:enter()
