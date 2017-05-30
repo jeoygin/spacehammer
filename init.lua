@@ -5,6 +5,7 @@ local slack = require "slack"
 local multimedia = require "multimedia"
 
 require "preview-app"
+require "caffeine"
 
 local displayModalText = function(txt)
   hs.alert.closeAll()
@@ -41,16 +42,17 @@ modals = {
                         hs.hints.windowHints(wns, nil, true)
                         fsm:toIdle()
       end)
+      self.modal:bind("", "r", nil, function() hs.reload() end)
       self.modal:bind("","escape", function() fsm:toIdle() end)
-      function self.modal:entered() displayModalText "w \t- windows\na \t- apps\n j \t- jump\nm - media" end
+      function self.modal:entered() displayModalText "w \t- windows\na \t- apps\n j \t- jump\nm - media\nr \t- reload" end
     end 
   },
   windows = {
     init = function(self, fsm)
       self.modal = hs.hotkey.modal.new()
-      displayModalText "cmd + hjkl \t jumping\nhjkl \t\t\t\t halves\nalt + hjkl \t\t increments\nshift + hjkl \t resize\nn, p \t next, prev screen\ng \t\t\t\t\t grid\nm \t\t\t\t maximize\nu \t\t\t\t\t undo"
+      displayModalText "cmd + hjkl \t jumping\nhjkl \t\t\t\t halves\nalt + hjkl \t\t increments\nshift + hjkl \t resize\nn, p \t\t\t\t next, prev screen\ng \t\t\t\t\t grid\nm \t\t\t\t maximize\nf \t\t\t\t\t full screen\nc \t\t\t\t\t center\nu \t\t\t\t\t undo"
       self.modal:bind("","escape", function() fsm:toIdle() end)
-      self.modal:bind({"cmd"}, "space", nil, function() fsm:toMain() end)
+      self.modal:bind({"cmd"}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
       windows.bind(self.modal, fsm)
       self.modal:enter()
     end
@@ -58,14 +60,18 @@ modals = {
   apps = {
     init = function(self, fsm)
       self.modal = hs.hotkey.modal.new()
-      displayModalText "e \t emacs\nc \t chrome\nt \t terminal\ns \t slack\nb \t brave"
+      displayModalText "e \t emacs\nc \t chrome\nt \t terminal\ns \t slack\nb \t brave\nw \t 企业微信\nq \t QQ\nm  NeteaseMusic"
       self.modal:bind("","escape", function() fsm:toIdle() end)
       self.modal:bind({"cmd"}, "space", nil, function() fsm:toMain() end)
       hs.fnutils.each({
-          { key = "t", app = "iTerm" },
+          { key = "t", app = "iTerm2" },
           { key = "c", app = "Google Chrome" },
           { key = "b", app = "Brave" },
           { key = "e", app = "Emacs" },
+          { key = "f", app = "Finder" },
+          { key = "w", app = "企业微信" },
+          { key = "q", app = "QQ" },
+          { key = "m", app = "NeteaseMusic" },
           { key = "g", app = "Gitter" }}, function(item)
 
           self.modal:bind("", item.key, function() windows.activateApp(item.app); fsm:toIdle()  end)
@@ -134,6 +140,10 @@ local fsm = machine.create({
       end,
     }
 })
+
+switcher = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter())
+
+hs.hotkey.bind('alt', 'tab' , function() switcher:next() end)
 
 fsm:toMain()
 
