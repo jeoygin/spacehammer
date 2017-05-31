@@ -13,12 +13,29 @@ local displayModalText = function(txt)
 end
 
 local mod = "alt"
+local appmod = {"cmd", "ctrl"}
+
+local apps = {
+  { key = "t", app = "iTerm2" },
+  { key = "c", app = "Google Chrome" },
+  { key = "b", app = "Brave" },
+  { key = "e", app = "Emacs" },
+  { key = "f", app = "Finder" },
+  { key = "w", app = "企业微信" },
+  { key = "q", app = "QQ" },
+  { key = "m", app = "NeteaseMusic" },
+  { key = "g", app = "Gitter" }
+}
 
 allowedApps = {"Emacs", "iTerm2"}
 hs.hints.showTitleThresh = 4
 hs.hints.titleMaxSize = 10
 hs.hints.fontSize = 30
 hs.hints.hintChars = {"S","A","D","F","J","K","L","E","W","C","M","P","G","H"}
+
+hs.fnutils.each(apps, function(item)
+  hs.hotkey.bind(appmod, item.key, function() windows.activateApp(item.app) end)
+end)
 
 local filterAllowedApps = function(w)
   if (not w:isStandard()) and (not utils.contains(allowedApps, w:application():name())) then
@@ -65,18 +82,8 @@ modals = {
       displayModalText "e \t emacs\nc \t chrome\nt \t terminal\ns \t slack\nb \t brave\nw \t 企业微信\nq \t QQ\nm  NeteaseMusic"
       self.modal:bind("","escape", function() fsm:toIdle() end)
       self.modal:bind({mod}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
-      hs.fnutils.each({
-          { key = "t", app = "iTerm2" },
-          { key = "c", app = "Google Chrome" },
-          { key = "b", app = "Brave" },
-          { key = "e", app = "Emacs" },
-          { key = "f", app = "Finder" },
-          { key = "w", app = "企业微信" },
-          { key = "q", app = "QQ" },
-          { key = "m", app = "NeteaseMusic" },
-          { key = "g", app = "Gitter" }}, function(item)
-
-          self.modal:bind("", item.key, function() windows.activateApp(item.app); fsm:toIdle()  end)
+      hs.fnutils.each(apps, function(item)
+        self.modal:bind("", item.key, function() windows.activateApp(item.app); fsm:toIdle()  end)
       end)
 
       slack.bind(self.modal, fsm)
