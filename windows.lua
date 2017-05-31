@@ -1,5 +1,10 @@
 local windows = {}
 
+-- define screens
+
+local mainScreen = hs.screen.allScreens()[1]
+local secondScreen = hs.screen.allScreens()[2]
+
 -- hs.window.setFrameCorrectness = true
 
 -- define window movement/resize operation mappings
@@ -170,8 +175,12 @@ windows.bind = function(modal, fsm)
   end)
 
   -- moving windows around screens
-  modal:bind({}, 'p', function() undo:push(); fw():moveOneScreenNorth() end)
-  modal:bind({}, 'n', function() undo:push(); fw():moveOneScreenSouth() end)
+  modal:bind({}, 'n', function() undo:push(); fw():moveOneScreenNorth() end)
+  modal:bind({}, 's', function() undo:push(); fw():moveOneScreenSouth() end)
+  modal:bind({}, 'e', function() undo:push(); fw():moveOneScreenEast() end)
+  modal:bind({}, 'w', function() undo:push(); fw():moveOneScreenWest() end)
+  modal:bind({}, '1', function() undo:push(); fw():moveToScreen(mainScreen) end)
+  modal:bind({}, '2', function() undo:push(); fw():moveToScreen(secondScreen) end)
 end
 
 -- undo for window operations

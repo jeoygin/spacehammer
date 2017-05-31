@@ -12,6 +12,8 @@ local displayModalText = function(txt)
   alert(txt, 999999)
 end
 
+local mod = "alt"
+
 allowedApps = {"Emacs", "iTerm2"}
 hs.hints.showTitleThresh = 4
 hs.hints.titleMaxSize = 10
@@ -31,7 +33,7 @@ modals = {
       if self.modal then
         self.modal:enter()
       else
-        self.modal = hs.hotkey.modal.new({"cmd"}, "space")
+        self.modal = hs.hotkey.modal.new({mod}, "space")
       end
       self.modal:bind("","space", nil, function() fsm:toIdle(); windows.activateApp("Alfred 3") end)
       self.modal:bind("","w", nil, function() fsm:toWindows() end)
@@ -50,9 +52,9 @@ modals = {
   windows = {
     init = function(self, fsm)
       self.modal = hs.hotkey.modal.new()
-      displayModalText "cmd + hjkl \t jumping\nhjkl \t\t\t\t halves\nalt + hjkl \t\t increments\nshift + hjkl \t resize\nn, p \t\t\t\t next, prev screen\ng \t\t\t\t\t grid\nm \t\t\t\t maximize\nf \t\t\t\t\t full screen\nc \t\t\t\t\t center\nu \t\t\t\t\t undo"
+      displayModalText "cmd + hjkl \t jumping\nhjkl \t\t\t\t halves\nalt + hjkl \t\t increments\nshift + hjkl \t resize\nn, s, e, w \t south, north, east, west screen\n1 \t\t\t\t\t main screen\n2 \t\t\t\t\t second screen\ng \t\t\t\t\t grid\nm \t\t\t\t maximize\nf \t\t\t\t\t full screen\nc \t\t\t\t\t center\nu \t\t\t\t\t undo"
       self.modal:bind("","escape", function() fsm:toIdle() end)
-      self.modal:bind({"cmd"}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
+      self.modal:bind({mod}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
       windows.bind(self.modal, fsm)
       self.modal:enter()
     end
@@ -62,7 +64,7 @@ modals = {
       self.modal = hs.hotkey.modal.new()
       displayModalText "e \t emacs\nc \t chrome\nt \t terminal\ns \t slack\nb \t brave\nw \t 企业微信\nq \t QQ\nm  NeteaseMusic"
       self.modal:bind("","escape", function() fsm:toIdle() end)
-      self.modal:bind({"cmd"}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
+      self.modal:bind({mod}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
       hs.fnutils.each({
           { key = "t", app = "iTerm2" },
           { key = "c", app = "Google Chrome" },
@@ -88,7 +90,7 @@ modals = {
       displayModalText "h \t previous track\nl \t next track\nk \t volume up\nj \t volume down\np \t play/pause\na \t launch player"
 
       self.modal:bind("","escape", function() fsm:toIdle() end)
-      self.modal:bind({"cmd"}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
+      self.modal:bind({mod}, "space", nil, function() fsm:toIdle(); fsm:toMain() end)
 
       multimedia.bind(self.modal, fsm)
       self.modal:enter()
