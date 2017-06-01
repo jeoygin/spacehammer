@@ -14,6 +14,7 @@ end
 
 local mod = "alt"
 local appmod = {"cmd", "ctrl"}
+local winmod = {"cmd", "ctrl", "alt"}
 
 local apps = {
   { key = "t", app = "iTerm2" },
@@ -27,6 +28,18 @@ local apps = {
   { key = "g", app = "Gitter" }
 }
 
+local winFuns = {
+  { key = "Left", fun = windows.moveToLeftScreen },
+  { key = "Right", fun = windows.moveToRightScreen },
+  { key = "Up", fun = windows.moveToUpperScreen },
+  { key = "Down", fun = windows.moveToLowerScreen },
+  { key = "1", fun = windows.moveToMainScreen },
+  { key = "2", fun = windows.moveToSecondScreen },
+  { key = "c", fun = windows.center },
+  { key = "m", fun = windows.maximize },
+  { key = "f", fun = windows.toggleFullScreen }
+}
+
 allowedApps = {"Emacs", "iTerm2"}
 hs.hints.showTitleThresh = 4
 hs.hints.titleMaxSize = 10
@@ -35,6 +48,10 @@ hs.hints.hintChars = {"S","A","D","F","J","K","L","E","W","C","M","P","G","H"}
 
 hs.fnutils.each(apps, function(item)
   hs.hotkey.bind(appmod, item.key, function() windows.activateApp(item.app) end)
+end)
+
+hs.fnutils.each(winFuns, function(item)
+  hs.hotkey.bind(winmod, item.key, function() item.fun() end)
 end)
 
 local filterAllowedApps = function(w)

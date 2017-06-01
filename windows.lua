@@ -113,21 +113,57 @@ function launchOrCycleFocus(applicationName)
   end
 end
 
+windows.toggleFullScreen = function()
+  fw():toggleFullScreen()
+end
+
+windows.maximize = function()
+  rect({0, 0, 1, 1})()
+  windows.highlighActiveWin()
+end
+
+windows.center = function()
+  fw():centerOnScreen()
+end
+
+windows.moveToUpperScreen = function()
+  fw():moveOneScreenNorth()
+end
+
+windows.moveToLowerScreen = function()
+  fw():moveOneScreenSouth()
+end
+
+windows.moveToLeftScreen = function()
+  fw():moveOneScreenWest()
+end
+
+windows.moveToRightScreen = function()
+  fw():moveOneScreenEast()
+end
+
+windows.moveToMainScreen = function()
+  fw():moveToScreen(mainScreen)
+end
+
+windows.moveToSecondScreen = function()
+  fw():moveToScreen(secondScreen)
+end
+
 windows.bind = function(modal, fsm)
   -- maximize window
   modal:bind("","m", function()
-               rect({0, 0, 1, 1})()
-               windows.highlighActiveWin()
+               windows.maximize()
   end)
 
   -- fullscreen
   modal:bind("","f", function()
-               fw():toggleFullScreen()
+               windows.toggleFullScreen()
   end)
 
   -- center on screen
   modal:bind("","c", function()
-               fw():centerOnScreen()
+               windows.center()
   end)
 
   -- undo
@@ -175,12 +211,12 @@ windows.bind = function(modal, fsm)
   end)
 
   -- moving windows around screens
-  modal:bind({}, 'n', function() undo:push(); fw():moveOneScreenNorth() end)
-  modal:bind({}, 's', function() undo:push(); fw():moveOneScreenSouth() end)
-  modal:bind({}, 'e', function() undo:push(); fw():moveOneScreenEast() end)
-  modal:bind({}, 'w', function() undo:push(); fw():moveOneScreenWest() end)
-  modal:bind({}, '1', function() undo:push(); fw():moveToScreen(mainScreen) end)
-  modal:bind({}, '2', function() undo:push(); fw():moveToScreen(secondScreen) end)
+  modal:bind({}, 'n', function() undo:push(); windows.moveToUpperScreen() end)
+  modal:bind({}, 's', function() undo:push(); windows.moveToLowerScreen() end)
+  modal:bind({}, 'e', function() undo:push(); windows.moveToRightScreen() end)
+  modal:bind({}, 'w', function() undo:push(); windows.moveToLeftScreen() end)
+  modal:bind({}, '1', function() undo:push(); windows.moveToMainScreen() end)
+  modal:bind({}, '2', function() undo:push(); windows.moveToSecondScreen() end)
 end
 
 -- undo for window operations
