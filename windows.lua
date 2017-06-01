@@ -118,7 +118,7 @@ windows.toggleFullScreen = function()
 end
 
 windows.maximize = function()
-  rect({0, 0, 1, 1})()
+  fw():maximize(0)
   windows.highlighActiveWin()
 end
 
